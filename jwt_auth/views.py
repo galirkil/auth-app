@@ -20,7 +20,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     """
 
 
-@extend_schema(summary='Обновление refresh-токена')
+@extend_schema(summary='Обновление access-токена')
 class CustomTokenRefreshView(TokenRefreshView):
     """
     Принимает refresh-токен и возращает access-токен, если refresh-токен
