@@ -129,6 +129,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Default user model
+
+AUTH_USER_MODEL = 'jwt_auth.CustomUser'
+
 # Django REST Framework
 
 REST_FRAMEWORK = {
