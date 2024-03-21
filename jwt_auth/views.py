@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
+from rest_framework_simplejwt.exceptions import TokenError
 
 from jwt_auth.serializers import LogoutSerializer, UserSerializer
 
@@ -18,6 +19,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     Принимает email-адрес пользователя и пароль, возвращает пару
     access и refresh jwt-токенов подтвреждающих аутентификацию пользователя.
     """
+    pass
 
 
 @extend_schema(summary='Обновление access-токена')
@@ -60,5 +62,6 @@ class LogoutViewJWT(APIView):
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response(status=HTTP_205_RESET_CONTENT)
-        except KeyError:
-            return Response(status=HTTP_400_BAD_REQUEST)
+        except TokenError as bad_token:
+            return Response(status=HTTP_400_BAD_REQUEST,
+                            data={'detail': str(bad_token)})
