@@ -4,11 +4,26 @@ from rest_framework.serializers import ModelSerializer
 from jwt_auth.models import CustomUser
 
 
-class UserSerializer(ModelSerializer):
+class UserProfileSerializer(ModelSerializer):
+    """
+    Информация о текущей учетной записи пользователя.
+    """
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name',
+                  'date_joined']
 
+
+class UserSignUpSerializer(ModelSerializer):
+    """
+    Для регистрации нового пользователя.
+    """
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'username', 'password']
+
+
+# Дальше идут сериализаторы используемые только для генерации схемы OpenAPi
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
