@@ -50,13 +50,10 @@ class UserDetailViewTests(BaseApiTestCase, JWTAuthenticationMixin):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class LogoutViewJWTTests(BaseApiTestCase, JWTAuthenticationMixin,
-                         GetRefreshTokenMixin):
+class LogoutViewJWTTests(BaseApiTestCase, GetRefreshTokenMixin):
     """Тестирует view завершения сессии текущего пользователя"""
-    def test_authorized_user_can_logout(self):
-        self.jwt_authenticate(self.client, self.credentials)
+    def test_user_can_logout(self):
         refresh_token = self.get_refresh_token(self.client, self.credentials)
-
         is_token_blacklisted = BlacklistedToken.objects.filter(
             token__token=refresh_token).exists()
         self.assertEqual(is_token_blacklisted, False)
@@ -66,10 +63,3 @@ class LogoutViewJWTTests(BaseApiTestCase, JWTAuthenticationMixin,
         is_token_blacklisted_after_request = BlacklistedToken.objects.filter(
             token__token=refresh_token).exists()
         self.assertEqual(is_token_blacklisted_after_request, True)
-
-    def test_unauthorized_user_cant_logout(self):
-        self.obtain_tokens(self.client, self.credentials)
-        refresh_token = self.get_refresh_token(self.client, self.credentials)
-        response = self.client.post(LOGOUT_URL, {'refresh': refresh_token},
-                                    format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
